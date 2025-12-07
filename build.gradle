@@ -1,0 +1,52 @@
+plugins {
+  id 'java'
+  id 'application'
+  id 'org.springframework.boot' version '4.0.0'
+  id 'org.openapi.generator' version '7.17.0'
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation('org.springframework.boot:spring-boot-starter-web')
+  implementation('com.google.code.gson:gson:2.10.1')
+  implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+  implementation('org.openapitools:jackson-databind-nullable:0.2.6') // Use the latest version available
+  implementation("com.squareup.okhttp3:okhttp:5.3.2")
+  testImplementation('org.junit.jupiter:junit-jupiter-api:5.11.0')
+  testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.11.0')
+}
+
+application {
+  mainClass = 'com.weather.rusty.RustyWeather'
+}
+
+sourceSets {
+  main {
+    java.srcDirs = ["app/src/main/java", "$buildDir/generated/src/main/java"]
+  }
+}
+
+test {
+  useJUnitPlatform()
+}
+
+tasks.named("compileJava") {
+  dependsOn("openApiGenerate")
+}
+
+openApiGenerate {
+  generatorName = "java" // Example: "java", "kotlin", "typescript-fetch"
+  inputSpec = "$rootDir/app/src/main/resources/openapi.yaml" 
+  outputDir = "$buildDir/generated" // Output directory for generated code
+  apiPackage = "gov.weather.api"
+  modelPackage = "gov.weather.model"
+  validateSpec = false
+  // Add other configurations as needed, e.g., auth settings for private URLs
+  // auth = "someAuthHeader:Bearer my_token"
+}
+
