@@ -2,7 +2,7 @@ plugins {
   id 'java'
   id 'application'
   id 'org.springframework.boot' version '4.0.0'
-  id 'org.openapi.generator' version '7.17.0'
+  id 'org.openapi.generator' version '7.14.0'
 }
 
 apply plugin: 'io.spring.dependency-management'
